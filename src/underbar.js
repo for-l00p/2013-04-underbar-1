@@ -5,17 +5,42 @@ var _ = {};
   // Return an array of the last n elements of an array. If n is undefined,
   // return just the last element.
   _.last = function(array, n) {
+    if (n == undefined) {
+      return array[array.length - 1];
+    }
+    else {
+      var returnArray = []
+      for (var i = Math.max(array.length - n, 0); i <= array.length - 1; i++) {
+        returnArray[returnArray.length] = array[i];
+      };
+      return returnArray;
+    }
   };
 
   // Like last, but for the first elements
   _.first = function(array, n) {
     // TIP: you can often re-use similar functions in clever ways, like so:
-    return _.last(array.reverse(), n);
+    var returnArray = undefined;
+    if (typeof(array) == 'object' && !Array.isArray(array)) {
+      returnArray = _.last(Array.prototype.slice.call(array).reverse(), n);
+    }
+    else {
+      returnArray = _.last(array.reverse(), n);
+    }
+    if (!Array.isArray(returnArray)) {
+      return returnArray;
+    }
+    else {
+      return returnArray.reverse();
+    } 
   };
 
 
   // Call iterator(value, key, collection) for each element of collection
   _.each = function(obj, iterator) {
+    for (var i = 0; i <= obj.length - 1; i++){
+      iterator(obj[i], i, obj);
+    }
   };
 
   /*
@@ -40,16 +65,39 @@ var _ = {};
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, iterator) {
+    var returnArray = [];
+    _.each(collection, function(value){
+      if (iterator(value)){
+        returnArray.push(value);
+      }
+    })
+    return returnArray;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, iterator) {
     // TIP: see if you can re-use _.select() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, function(value){
+      return !iterator(value);
+    });
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var returnArray = []
+    for (var i in array){
+      var containsValue = false;
+      for (var j in returnArray){
+        if (array[i] == returnArray[j]){
+          containsValue = true;
+        }
+      }
+      if(!containsValue){
+        returnArray.push(array[i]);
+      }
+    }
+    return returnArray;
   };
 
 
@@ -61,6 +109,11 @@ var _ = {};
 
   // Return the results of applying an iterator to each element.
   _.map = function(array, iterator) {
+    var returnArray = [];
+    _.each(array, function(value){
+      returnArray.push(iterator(value));
+    });
+    return returnArray;
   };
 
   /*
@@ -80,6 +133,11 @@ var _ = {};
 
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName) {
+    var returnArray = list;
+    _.each(returnArray, function(value){
+      value[methodName].apply(value);
+    });
+    return returnArray;
   };
 
   // Reduces an array or object to a single value by repetitively calling

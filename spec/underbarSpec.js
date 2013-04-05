@@ -24,7 +24,7 @@ describe("last", function() {
 
 });
 
-/*
+
 
 describe("first", function() {
   it("should be able to pull out the first element of an array", function() {
@@ -43,6 +43,7 @@ describe("first", function() {
   });
 
 });
+
 
 describe("each", function() {
   it("should provide value and iteration count", function() {
@@ -171,7 +172,7 @@ describe("invoke", function() {
     expect(result[1]).to.eql([1, 2, 3]);
   });
 });
-
+/*
 describe("invoke with function reference", function() {
   it("should sort the first array", function() {
     var list = [[5, 1, 7], [3, 2, 1]];
