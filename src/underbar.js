@@ -180,12 +180,22 @@ var _ = {};
 
   // Determine whether all of the elements match a truth test.
   _.every = function(obj, iterator) {
+    return _.reduce(obj, function(isTrue, item){
+      if (!isTrue){
+        return false;
+      }
+      return Boolean(iterator(item));
+    }, true)
     // TIP: use reduce on this one!
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.any = function(obj, iterator) {
+    iterator = iterator || function(item){return Boolean(item);}
+    return !_.every(obj, function(value){
+      return !iterator(value);
+    });
     // TIP: re-use every() here
   };
 
