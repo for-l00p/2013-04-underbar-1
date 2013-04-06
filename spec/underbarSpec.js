@@ -172,7 +172,7 @@ describe("invoke", function() {
     expect(result[1]).to.eql([1, 2, 3]);
   });
 });
-/*
+
 describe("invoke with function reference", function() {
   it("should sort the first array", function() {
     var list = [[5, 1, 7], [3, 2, 1]];
@@ -213,7 +213,7 @@ describe("contains", function() {
     expect(_.contains([1,3,9], 2)).to.equal(false);
   });
 });
-
+/*
 describe("every", function() {
   var getValue = function(i) { return i; };
   var isEven = function(num) { return num % 2 === 0; };

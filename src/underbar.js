@@ -38,7 +38,7 @@ var _ = {};
 
   // Call iterator(value, key, collection) for each element of collection
   _.each = function(obj, iterator) {
-    for (var i = 0; i <= obj.length - 1; i++){
+    for (var i in obj){
       iterator(obj[i], i, obj);
     }
   };
@@ -56,7 +56,7 @@ var _ = {};
 
     _.each(array, function(item, index) {
       if (item === target && result === -1) {
-        result = index;
+          result = parseInt(index);
       }
     });
 
@@ -135,7 +135,12 @@ var _ = {};
   _.invoke = function(list, methodName) {
     var returnArray = list;
     _.each(returnArray, function(value){
-      value[methodName].apply(value);
+      if (typeof methodName === 'string'){
+        value[methodName].apply(value);
+      }
+      else {
+        methodName.apply(value);
+      }
     });
     return returnArray;
   };
@@ -154,6 +159,10 @@ var _ = {};
   //   }, 0); // should be 6
   //
   _.reduce = function(obj, iterator, initialValue) {
+    var returnValue = initialValue || 0;
+    _.each(obj, function(value){
+      returnValue = iterator(returnValue, value)});
+    return returnValue;
   };
 
   // Determine if the array or object contains a given value (using `===`).
