@@ -134,14 +134,16 @@ var _ = {};
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName) {
     var returnArray = list;
-    _.each(returnArray, function(value){
-      if (typeof methodName === 'string'){
+    if (typeof methodName === 'string'){
+      _.each(returnArray, function(value){
         value[methodName].apply(value);
-      }
-      else {
+      });
+    }
+    else {
+      _.each(returnArray, function(value){
         methodName.apply(value);
-      }
-    });
+      });
+    }
     return returnArray;
   };
 
@@ -217,11 +219,25 @@ var _ = {};
   //   }); // obj1 now contains key1, key2, key3 and bla
   //
   _.extend = function(obj) {
+    for (var i = 1; i < arguments.length; i++){
+      for (var item in arguments[i]){
+        arguments[0][item] = arguments[i][item];
+      }
+    }
+    return arguments[0];
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    for (var i = 1; i < arguments.length; i++){
+      for (var item in arguments[i]){
+        if (!arguments[0].hasOwnProperty(item)){
+          arguments[0][item] = arguments[i][item];
+        }
+      }
+    }
+    return arguments[0];
   };
 
 
@@ -259,6 +275,14 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var memos = {};
+    return function(primitive){
+      if (!memos.hasOwnProperty(primitive)){
+        memos[primitive] = func(primitive);
+      }
+      return memos[primitive];
+    };
+
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -268,6 +292,10 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+
+    var newArguments = _.last(arguments, arguments.length - 2);
+    console.log(newArguments);
+    setTimeout(function(){func.apply(func,newArguments);}, wait);
   };
 
 
