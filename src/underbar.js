@@ -305,6 +305,15 @@ var _ = {};
 
   // Shuffle an array.
   _.shuffle = function(obj) {
+    var returnArray = [];
+    for (var item in obj){
+      var random = Math.floor(Math.random() * obj.length);
+      while (returnArray[random] != undefined){
+        random = Math.floor(Math.random() * obj.length);
+      }
+      returnArray[random] = obj[item];
+    }
+    return returnArray;
   };
 
   /* (End of pre-course curriculum) */
