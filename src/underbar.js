@@ -38,8 +38,17 @@ var _ = {};
 
   // Call iterator(value, key, collection) for each element of collection
   _.each = function(obj, iterator) {
-    for (var i in obj){
-      iterator(obj[i], i, obj);
+    if(!obj){return;}
+    if(obj.length){
+      for(var i = 0; i < obj.length; i++){
+        iterator(obj[i], i, obj);
+      }
+    } else {
+      for (var i in obj){
+        if(obj.hasOwnProperty(i)){
+          iterator(obj[i], i, obj);
+        }      
+      }
     }
   };
 
@@ -53,13 +62,11 @@ var _ = {};
   // is not present in the array.
   _.indexOf = function(array, target){
     var result = -1;
-
-    _.each(array, function(item, index) {
+    _.each(array, function(item, index){
       if (item === target && result === -1) {
-          result = parseInt(index);
-      }
+          result = index;
+        }
     });
-
     return result;
   };
 
@@ -133,18 +140,9 @@ var _ = {};
 
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName) {
-    var returnArray = list;
-    if (typeof methodName === 'string'){
-      _.each(returnArray, function(value){
-        value[methodName].apply(value);
-      });
-    }
-    else {
-      _.each(returnArray, function(value){
-        methodName.apply(value);
-      });
-    }
-    return returnArray;
+    return _.map(list, function(value){
+      return typeof methodName === 'string' ? value[methodName].apply(value) : methodName.apply(value);
+    });
   };
 
   // Reduces an array or object to a single value by repetitively calling
@@ -294,8 +292,7 @@ var _ = {};
   _.delay = function(func, wait) {
 
     var newArguments = _.last(arguments, arguments.length - 2);
-    console.log(newArguments);
-    setTimeout(function(){func.apply(func,newArguments);}, wait);
+    setTimeout(function(){func.apply(null,newArguments);}, wait);
   };
 
 
