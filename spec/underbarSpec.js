@@ -426,7 +426,7 @@ describe("delay", function() {
 
 describe("shuffle", function() {
   it("should not modify the original object", function() {
-    var numbers = [1,2,3,4,5,6,7,8,9];//_.range(10);
+    var numbers = _.range(10);
     var shuffled = _.shuffle(numbers);
 
     expect(shuffled.sort()).to.eql(numbers);
