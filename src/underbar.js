@@ -306,14 +306,14 @@ var _ = {};
   // Shuffle an array.
   _.shuffle = function(obj) {
     var result = obj.slice(0);
-    var swap = function(a,b){
-      var temp = a;
-      a = b;
-      b = temp;
+    var swap = function(a,b, array){
+      var temp = array[a];
+      array[a] = array[b];
+      array[b] = temp;
     };
     for (var i = 0; i < result.length; i++){
       var random = Math.floor(Math.random() * obj.length);
-      swap(result[i], result[random]);
+      swap(i, random, result);
     }
     return result;
   };
