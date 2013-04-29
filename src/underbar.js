@@ -1,53 +1,45 @@
 var _ = {};
 
 (function() {
-
+  _.toArray = function(array){
+    return Array.prototype.slice.call(array);
+  };
   // Return an array of the last n elements of an array. If n is undefined,
   // return just the last element.
   _.last = function(array, n) {
-    if (n == undefined) {
+    if (n === undefined) {
       return array[array.length - 1];
     }
     else {
-      var returnArray = []
-      for (var i = Math.max(array.length - n, 0); i <= array.length - 1; i++) {
-        returnArray[returnArray.length] = array[i];
-      };
-      return returnArray;
+      return _.toArray(array).slice(Math.max(0,array.length - n));
     }
   };
 
   // Like last, but for the first elements
   _.first = function(array, n) {
     // TIP: you can often re-use similar functions in clever ways, like so:
-    var returnArray = undefined;
-    if (typeof(array) == 'object' && !Array.isArray(array)) {
-      returnArray = _.last(Array.prototype.slice.call(array).reverse(), n);
+    array = _.toArray(array);
+    if (n === undefined){
+      return array[0];
     }
     else {
-      returnArray = _.last(array.reverse(), n);
+      return _.last(array.reverse(), n).reverse();
     }
-    if (!Array.isArray(returnArray)) {
-      return returnArray;
-    }
-    else {
-      return returnArray.reverse();
-    } 
   };
 
 
   // Call iterator(value, key, collection) for each element of collection
   _.each = function(obj, iterator) {
-    if(!obj){return;}
+    if(obj === null){return;}
     if(obj.length){
       for(var i = 0; i < obj.length; i++){
         iterator(obj[i], i, obj);
       }
     } else {
-      for (var i in obj){
-        if(obj.hasOwnProperty(i)){
-          iterator(obj[i], i, obj);
-        }      
+      for (var key in obj){
+        if(obj.hasOwnProperty(key)){
+          iterator(obj[key], key, obj);
+        }
       }
     }
   };
@@ -77,7 +69,7 @@ var _ = {};
       if (iterator(value)){
         returnArray.push(value);
       }
-    })
+    });
     return returnArray;
   };
 
@@ -92,19 +84,15 @@ var _ = {};
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    var returnArray = []
-    for (var i in array){
-      var containsValue = false;
-      for (var j in returnArray){
-        if (array[i] == returnArray[j]){
-          containsValue = true;
-        }
+    var tracker = {};
+    var result = [];
+    _.each(array, function(item){
+      if(!tracker.hasOwnProperty(item)){
+        result.push(item);
+        tracker[item]= true;
       }
-      if(!containsValue){
-        returnArray.push(array[i]);
-      }
-    }
-    return returnArray;
+    });
+    return result;
   };
 
 
@@ -161,7 +149,8 @@ var _ = {};
   _.reduce = function(obj, iterator, initialValue) {
     var returnValue = initialValue || 0;
     _.each(obj, function(value){
-      returnValue = iterator(returnValue, value)});
+      returnValue = iterator(returnValue, value);
+    });
     return returnValue;
   };
 
@@ -181,18 +170,15 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(obj, iterator) {
     return _.reduce(obj, function(isTrue, item){
-      if (!isTrue){
-        return false;
-      }
-      return Boolean(iterator(item));
-    }, true)
+      return isTrue && Boolean(iterator(item));
+    }, true);
     // TIP: use reduce on this one!
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.any = function(obj, iterator) {
-    iterator = iterator || function(item){return Boolean(item);}
+    iterator = iterator || function(item){return Boolean(item);};
     return !_.every(obj, function(value){
       return !iterator(value);
     });
@@ -291,7 +277,7 @@ var _ = {};
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
 
-    var newArguments = _.last(arguments, arguments.length - 2);
+    var newArguments = _.toArray(arguments).slice(2);
     setTimeout(function(){func.apply(null,newArguments);}, wait);
   };
 
@@ -319,15 +305,17 @@ var _ = {};
 
   // Shuffle an array.
   _.shuffle = function(obj) {
-    var returnArray = [];
-    for (var item in obj){
+    var result = obj.slice(0);
+    var swap = function(a,b){
+      var temp = a;
+      a = b;
+      b = temp;
+    };
+    for (var i = 0; i < result.length; i++){
       var random = Math.floor(Math.random() * obj.length);
-      while (returnArray[random] != undefined){
-        random = Math.floor(Math.random() * obj.length);
-      }
-      returnArray[random] = obj[item];
+      swap(result[i], result[random]);
     }
-    return returnArray;
+    return result;
   };
 
   /* (End of pre-course curriculum) */
